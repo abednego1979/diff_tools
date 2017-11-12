@@ -113,21 +113,21 @@ def main_patch(cfFile):
     pw=datetime.date.today().day*3+datetime.date.today().month
     b=''
     try:
-        with open('info_file.txt', 'r') as pf:
+        with open('../../info_file.txt', 'r') as pf:
             b=pf.read()
     except:
         print 'read raw info fail'
         return
         
-    b.rstrip('\r\n ')
-    myCrypt().decrypt(b, pw, 'data.out.zip')
+    b=b.rstrip('\r\n ')
+    myCrypt().decrypt(b, pw, '../../data.out.zip')
     print 'recreate zip file from raw string'
     
     
-    outFileList = myZipFile().myUnzipFile('data.out.zip')
+    outFileList = myZipFile().myUnzipFile('../../data.out.zip')
     print 'unzip file and get file:'
     print outFileList
-    os.remove('data.out.zip')
+    os.remove('../../data.out.zip')
     
     assert len(outFileList)==1
     
