@@ -41,14 +41,14 @@ def diff_patch(opType, old_dir, new_dir, patchName):
     return
 
 
-def main_diff(cfFile):
+def main_diff(cfFile, projName):
     old_dir=''
     new_dir=''
     
     cf = ConfigParser.ConfigParser()
     cf.read(cfFile)#读取配置文件
-    old_dir='..\\'+cf.get('tipster2_diff', "old_dir")
-    new_dir='..\\'+cf.get('tipster2_diff', "new_dir")
+    old_dir='..\\'+cf.get(projName+'_diff', "old_dir")
+    new_dir='..\\'+cf.get(projName+'_diff', "new_dir")
     
     while True:
         print 'Old Dir: '+old_dir
@@ -108,7 +108,7 @@ def main_diff(cfFile):
     
     os.remove('data.zip')
     
-def main_patch(cfFile):
+def main_patch(cfFile, projName):
     
     pw=datetime.date.today().day*3+datetime.date.today().month
     b=''
@@ -135,7 +135,7 @@ def main_patch(cfFile):
         
     cf = ConfigParser.ConfigParser()
     cf.read(cfFile)#读取配置文件
-    old_dir=cf.get('tipster2_patch', "old_dir")
+    old_dir=cf.get(projName+'_patch', "old_dir")
     old_dir="/".join(old_dir.split("\\"))
     
     while True:
@@ -162,7 +162,7 @@ def main_patch(cfFile):
     diff_patch('patch', old_dir, None, outFileList[0])
     os.remove(outFileList[0])
 
-def main(cfFile):
+def main(cfFile, projName):
 
     if not os.path.isfile(os.path.join(os.getcwd(), cfFile)):
         print 'Config File is not exist'
@@ -172,13 +172,14 @@ def main(cfFile):
     while True:
         a=raw_input('Press 1 to run main_diff() or Press 2 to run main_patch() :')
         if a=='1':
-            main_diff(cfFile)
+            main_diff(cfFile, projName)
             break
         elif a=='2':
-            main_patch(cfFile)
+            main_patch(cfFile, projName)
             break
         else:
             pass
         
-        
-main('diffpatch.conf')
+assert len(sys.argv)==2
+
+main('diffpatch.conf', sys.argv[1])
