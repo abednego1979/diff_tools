@@ -186,6 +186,9 @@ def main(cfFile, projName):
         else:
             pass
         
+a1=myCrypt().encryptFile("data.zip", b'subwaysandtrains')
+myCrypt().decryptFile(a1, b'subwaysandtrains', "data2.zip")
+        
 assert len(sys.argv)==2
 
 main('diffpatch.conf', sys.argv[1])

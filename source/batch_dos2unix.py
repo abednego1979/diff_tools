@@ -21,7 +21,7 @@ class batch_dos2unix():
             if os.path.isfile('dos2unix.exe'):
                 return True
             else:
-                print '"dos2unix.exe" is not exist'
+                print ('"dos2unix.exe" is not exist')
                 return False
         elif self.__isLinuxSystem__():
             return True

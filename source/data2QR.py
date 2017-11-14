@@ -4,37 +4,29 @@
 
 import base64
 import datetime
+import json
+from aes import AESCrypto
 
 __metaclass__ = type
 
 class myCrypt():
     
-    def encrypt(self, filename, pw):
-        b=''
+    def encryptFile(self, filename, key):
         try:
             with open (filename, 'rb') as pf:
-                s=bytearray(pf.read())
-                for index in range(len(s)):
-                    try:
-                        s[index]+=pw
-                    except:
-                        s[index]-=(256-pw)
-                b=base64.b64encode(s)
+                message=pf.read()
+                message = AESCrypto(key, b'0000000000000000').encrypt(message)
+                message=base64.b64encode(message)
         except:
-            print 'encrypt fail'
+            print ('encrypt fail')
         
-        return b
+        return message
 
-    def decrypt(self, inputString, pw, filename):
-        b=base64.b64decode(inputString)
-        s=bytearray(b)
-        for index in range(len(s)):
-            try:
-                s[index]-=pw
-            except:
-                s[index]+=(256-pw)
+    def decryptFile(self, message, key, filename):
+        message = base64.b64decode(message)
+        message=AESCrypto(key, b'0000000000000000').decrypt(message)
         try:
             with open (filename, 'wb') as pf:
-                pf.write(s)
+                pf.write(message)
         except:
-            print 'decrypt fail'
+            print ('decrypt fail')
