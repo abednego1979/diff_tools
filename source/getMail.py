@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-#python 2.7
+#python 3.5
 
 
 import os, sys, string
@@ -85,7 +85,7 @@ username = "abednego1979@163.com"
 pp = poplib.POP3(host)
 pp.set_debuglevel(1)
 pp.user(username)
-password=raw_input('mail box password('+username+'):')
+password=input('mail box password('+username+'):')
 pp.pass_(password)
 
 ret = pp.stat()
@@ -120,7 +120,7 @@ print ('--------')
 print (ret)
 
 while True:
-    a=raw_input('which to get?'+'('+'/'.join(ret.keys())+')')
+    a=input('which to get?'+'('+'/'.join(ret.keys())+')')
     if a in ret.keys():
         break
 

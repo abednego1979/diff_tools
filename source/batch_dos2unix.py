@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-#python 2.7
+#python 3.5
 
 
 import os

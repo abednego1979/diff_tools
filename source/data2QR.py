@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#Python 2.7.x
+#Python 3.5
 
 import base64
 import datetime

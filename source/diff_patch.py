@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Python 2.7.x
+#Python 3.5
 import diff_match_patch
 import os
 import shutil
@@ -23,12 +23,12 @@ class MyDiffPatch():
                 readstring=pf.read()
                 
                 if readstring:
-                    if isinstance(readstring, unicode):
+                    if isinstance(readstring, str):
                         oldCodingType='unicode'
                     else:
                         oldCodingType=chardet.detect(readstring)['encoding']
                         readstring=readstring.decode(oldCodingType)
-                        if not isinstance(readstring, unicode):
+                        if not isinstance(readstring, str):
                             assert 'File content decode fail'
                 else:
                     return '',None

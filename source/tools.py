@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#Python 2.7.x
+#Python 3.5
 import configparser
 import os
 import datetime
@@ -53,12 +53,12 @@ def main_diff(cfFile, projName):
     while True:
         print ('Old Dir: '+old_dir)
         print ('New Dir: '+new_dir)
-        a=raw_input('Are Directorys OK?(y/n)')
+        a=input('Are Directorys OK?(y/n)')
         if a=='Y' or a=='y':
             break
         elif a=='N' or a=='n':
-            old_dir=raw_input('input old dir:')
-            new_dir=raw_input('input new dir:')
+            old_dir=input('input old dir:')
+            new_dir=input('input new dir:')
         else:
             continue
     
@@ -146,11 +146,11 @@ def main_patch(cfFile, projName):
     
     while True:
         print ('Old Dir: '+old_dir)
-        a=raw_input('Is Directory OK?(y/n)')
+        a=input('Is Directory OK?(y/n)')
         if a=='Y' or a=='y':
             break
         elif a=='N' or a=='n':
-            old_dir=raw_input('input old dir:')
+            old_dir=input('input old dir:')
         else:
             continue
     
@@ -176,7 +176,7 @@ def main(cfFile, projName):
         
     
     while True:
-        a=raw_input('Press 1 to run main_diff() or Press 2 to run main_patch() :')
+        a=input('Press 1 to run main_diff() or Press 2 to run main_patch() :')
         if a=='1':
             main_diff(cfFile, projName)
             break
