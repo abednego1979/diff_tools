@@ -278,7 +278,7 @@ class MyDiffPatch():
     def writePatchToFile(self, buf, filename):
         filename=self.formatPath(filename)
         try:
-            with open(filename, 'wb') as pf:
+            with open(filename, 'w') as pf:
                 pf.write(buf)
         except:
             print ('ERROR: write patch to file fail')
@@ -288,7 +288,7 @@ class MyDiffPatch():
         filename=self.formatPath(filename)
         lines=[]
         try:
-            with open(filename, 'rb') as pf:
+            with open(filename, 'r') as pf:
                 lines = pf.readlines()
         except:
             print ('ERROR: read patch from file fail')
