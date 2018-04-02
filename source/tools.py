@@ -41,7 +41,7 @@ def diff_patch(opType, old_dir, new_dir, patchName):
     return
 
 
-def main_diff(cfFile, projName):
+def main_diff(cfFile, projName, table):
     old_dir=''
     new_dir=''
     
@@ -105,13 +105,15 @@ def main_diff(cfFile, projName):
     assert len(passKey)==16 or len(passKey)==24 or len(passKey)==32
     if not isinstance(passKey, bytes):
         passKey = passKey.encode()
-    b=myCrypt().encryptFile("data.zip", passKey)
+    b=myCrypt().encryptFile("data.zip", passKey, table=table)
     print ('trans zip file to string:')
     print (b)
     
+    
+    
     os.remove('data.zip')
     
-def main_patch(cfFile, projName):
+def main_patch(cfFile, projName, table):
     
     passKey=input('input the decrypt key:')
     assert len(passKey)==16 or len(passKey)==24 or len(passKey)==32
@@ -126,7 +128,7 @@ def main_patch(cfFile, projName):
         return
         
     b=b.rstrip('\r\n ')
-    myCrypt().decryptFile(b, passKey, '../../data.out.zip')
+    myCrypt().decryptFile(b, passKey, '../../data.out.zip', table=table)
     print ('recreate zip file from raw string')
     
     
@@ -169,6 +171,8 @@ def main_patch(cfFile, projName):
     os.remove(outFileList[0])
 
 def main(cfFile, projName):
+    
+    table=[]
 
     if not os.path.isfile(os.path.join(os.getcwd(), cfFile)):
         print ('Config File is not exist')
@@ -178,10 +182,10 @@ def main(cfFile, projName):
     while True:
         a=input('Press 1 to run main_diff() or Press 2 to run main_patch() :')
         if a=='1':
-            main_diff(cfFile, projName)
+            main_diff(cfFile, projName, table)
             break
         elif a=='2':
-            main_patch(cfFile, projName)
+            main_patch(cfFile, projName, table)
             break
         else:
             pass
