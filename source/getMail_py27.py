@@ -90,10 +90,10 @@ password=raw_input('mail box password('+username+'):')
 pp.pass_(password)
 
 ret = pp.stat()
-print ret
+print (ret)
 
 ret = pp.list()
-#print ret
+#print (ret)
 
 #'+OK 1204 261324250'
 assert ret[0].split(' ')[0]=='+OK'
@@ -105,32 +105,32 @@ down = pp.retr(int(ret[1][last_index-1].split(' ')[0]))
 msg_content = '\r\n'.join(down[1])
 
 msg = Parser().parsestr(msg_content)
-#print msg
+#print (msg)
 
-print '--------'
+print ('--------')
 ret=print_info(msg)
 
-print '--------'
-print ret
+print ('--------')
+print (ret)
 
 while True:
     a=raw_input('which to get?'+'('+'/'.join(ret.keys())+')')
     if a in ret.keys():
         break
 
-print 'get '+a
-print ret[a]
+print ('get '+a)
+print (ret[a])
 
 try:
     #with open('info_file.txt', 'wb') as pf:
     with codecs.open('info_file.txt', 'w', 'utf-8') as pf:
         pf.write(ret[a])
 except Exception as err:
-    print 'write file fail'
-    print err
-    print traceback.format_exc()
+    print ('write file fail')
+    print (err)
+    print(traceback.format_exc())    
 
-print 'write file ok'
+print ('write file ok')
 
 
 pp.quit()

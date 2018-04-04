@@ -2,7 +2,6 @@
 #python 3.5
 
 import traceback
-import codecs
 import os, sys, string
 import poplib
 import email
@@ -129,8 +128,7 @@ print ('get '+a)
 print (ret[a])
 
 try:
-    #with open('info_file.txt', 'wb') as pf:
-    with codecs.open('info_file.txt', 'w', 'utf-8') as pf:
+    with open('info_file.txt', 'w') as pf:
         pf.write(ret[a])
 except Exception as err:
     print ('write file fail')
