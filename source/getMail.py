@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 #python 3.5
 
-
+import traceback
 import os, sys, string
 import poplib
 import email
@@ -130,8 +130,10 @@ print (ret[a])
 try:
     with open('info_file.txt', 'w') as pf:
         pf.write(ret[a])
-except:
+except Exception as err:
     print ('write file fail')
+    print (err)
+    print(traceback.format_exc())    
 
 print ('write file ok')
 
