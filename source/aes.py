@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 """aes crypto."""
 
 from cryptography.hazmat.primitives import padding
