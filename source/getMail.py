@@ -96,11 +96,21 @@ ret = pp.list()
 #print (ret)
 
 #'+OK 1204 261324250'
-assert ret[0].split(' ')[0]=='+OK'
+temp=ret[0]
+try:
+    temp=temp.decode()
+except:
+    pass
+assert temp.split(' ')[0]=='+OK'
 
-last_index=int(ret[0].split(' ')[1])
+last_index=int(temp.split(' ')[1])
 
-down = pp.retr(int(ret[1][last_index-1].split(' ')[0]))
+temp=ret[1][last_index-1]
+try:
+    temp=temp.decode()
+except:
+    pass
+down = pp.retr(int(temp.split(' ')[0]))
 
 enterChar=''
 if platform.system() == "Windows":
@@ -109,7 +119,14 @@ elif platform.system() == "Linux":
     enterChar='\n'
 else:#for mac os
     enterChar='\r'
-msg_content = enterChar.join(down[1])
+
+temp=[]
+for item in down[1]:
+    try:
+        temp.append(item.decode())
+    except:
+        pass
+msg_content = enterChar.join(temp)
 
 msg = Parser().parsestr(msg_content)
 #print (msg)
