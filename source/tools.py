@@ -15,7 +15,7 @@ from batch_dos2unix import batch_dos2unix
 def getPatch_Dir(oldDir, newDir, outPatch):
     my_diff_patch=MyDiffPatch()
     #做补丁
-    buf=my_diff_patch.diff_dir_toString(oldDir, newDir, os.path.abspath(oldDir), ['.py', '.conf', '.c', '.cpp', ',h', 'txt', 'cl'])
+    buf=my_diff_patch.diff_dir_toString(oldDir, newDir, os.path.abspath(oldDir), ['.py', '.conf', '.c', '.cpp', ',h', 'txt', 'cl', 'html'])
     my_diff_patch.writePatchToFile(buf, outPatch)
     
     return
