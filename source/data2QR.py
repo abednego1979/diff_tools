@@ -13,6 +13,8 @@ import re
 import qrcode
 import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
+import cv2
+import numpy as np
 
 __metaclass__ = type
 
@@ -111,48 +113,70 @@ class myCrypt():
         print ("input info format is %s" % outFormat)
         if outFormat=='qr':
             message={}
-            #从二维码图片中获取信息
-            #1.找到目录下的所有文件名是'%03d.png'的图片
-            tempIndex=0
-            fileNameList=[]
-            while True:
-                if os.path.isfile('%03d.jpg' % tempIndex):
-                    fileNameList.append('%03d.jpg' % tempIndex)
-                else:
-                    break
-                tempIndex+=1
-            #2.获取二维码信息并拼接
-            print (fileNameList)
-            for imgFile in fileNameList:
-                print ("Proc:",imgFile)
-                img = Image.open(imgFile)
-                barcodes = pyzbar.decode(img)
-                print ("barcodes:%d" % len(barcodes))
-                for barcode in barcodes:
-                    barcodeData = barcode.data.decode("utf-8")
-                    try:
-                        m=re.match(r'''[0-9]{12}#[0-9]{3}''',barcodeData[:16])#信息的前面是时间戳和编号（类似'201905071228#000'），共16位
-                    except:
-                        continue
-                    if m:
-                        timeStr=m.group(0)[:12]
-                        indexStr=int(m.group(0)[13:])
-                        if timeStr in message.keys:
-                            message[timeStr].append([indexStr, barcodeData[16:]])
-                        else:
-                            message[timeStr]=[]
-                            message[timeStr].append([indexStr, barcodeData[16:]])
-                #这时message是类似{"201905071202": [[0, "abcde"], [1, "fghijkl"]], "201905071203": [[0, "mnopq"], [1, "rstuvw"]]}的形式
-                print (message)
-                #取出有最新时间戳的数据
-                message=message[sorted(list(message.keys()))[-1]]
-                #这时message是类似[[0, 'mnopq'], [1, 'rstuvw']]的形式，要基于序号排序
-                message.sort(key=lambda x:x[0])
-                #取数据
-                message="".join([item[1] for item in message])
             
-            #3按Base64解码
-            message = base64.b64decode(message)
+            #从视频中找二维码
+            #1.打开视频
+            vc = cv2.VideoCapture('D:\\github\\diff_tools\\source\\VID_20190507_220249.mp4')
+            
+            if vc.isOpened():
+                rval , frame = vc.read()
+            else:
+                rval = False
+            timeF = 20        #视频帧计数间隔频率
+            
+            c=1
+            last_timeStr=""
+            last_indexStr=""
+            while rval:   #循环读取视频帧  
+                rval, frame = vc.read()
+                if(c%timeF == 0) and rval: #每隔timeF帧进行存储操作
+                    #将获取到的帧转化为pil的格式
+                    img = Image.fromarray(np.uint8(frame))
+                    #如果需要，这里调整亮度，对比度，锐度，灰度图等,有时也需要适当缩放
+                    img = img.convert("L")
+                    
+                    #识别
+                    barcodes = pyzbar.decode(img)
+                    #print ("barcodes:",barcodes)
+                    for barcode in barcodes:
+                        barcodeData = barcode.data.decode("utf-8")
+                        try:
+                            m=re.match(r'''[0-9]{12}#[0-9]{3}''',barcodeData[:16])#信息的前面是时间戳和编号（类似'201905071228#000'），共16位
+                        except:
+                            continue
+                        if m:
+                            timeStr=m.group(0)[:12]
+                            indexStr=int(m.group(0)[13:])
+                            
+                            if last_timeStr != timeStr or last_indexStr != indexStr:
+                                last_timeStr=timeStr
+                                last_indexStr=indexStr
+                                print ("timeStr:",timeStr,"\tindexStr:",indexStr)
+                                if timeStr in message.keys():
+                                    message[timeStr].append([indexStr, barcodeData[16:]])
+                                else:
+                                    message[timeStr]=[]
+                                    message[timeStr].append([indexStr, barcodeData[16:]])                                            
+                c=c+1
+            vc.release()
+            
+            #这时message是类似{"201905071202": [[0, "abcde"], [1, "fghijkl"]], "201905071203": [[0, "mnopq"], [0, "mnopq"], [1, "rstuvw"]]}的形式
+            #print (message)
+            #取出有最新时间戳的数据
+            message=message[sorted(list(message.keys()))[-1]]
+            #这时message是类似[[0, 'mnopq'], [0, "mnopq"], [1, 'rstuvw']]的形式，要基于序号排序
+            message.sort(key=lambda x:x[0])
+            #取数据，注意要去重
+            indexList=[item[0] for item in message]
+            dataList=[item[1] for item in message]
+            message=[]
+            for i in range(max(indexList)+1):
+                if i in indexList:
+                    message.append(dataList[indexList.index(i)])
+                else:
+                    print ("Data with Index %d is miss!!!" % i)
+            message="".join(message)
+            message = base64.b64decode(message)            
             pass
         elif outFormat=='b64':
             message = base64.b64decode(message)
