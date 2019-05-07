@@ -108,6 +108,7 @@ class myCrypt():
         return message
 
     def decryptFile(self, message, key, filename, outFormat, table=[]):
+        print ("input info format is %s" % outFormat)
         if outFormat=='qr':
             message={}
             #从二维码图片中获取信息
@@ -115,14 +116,18 @@ class myCrypt():
             tempIndex=0
             fileNameList=[]
             while True:
-                if os.path.isfile('%03d.png' % tempIndex):
-                    fileNameList.append('%03d.png' % tempIndex)
+                if os.path.isfile('%03d.jpg' % tempIndex):
+                    fileNameList.append('%03d.jpg' % tempIndex)
                 else:
                     break
+                tempIndex+=1
             #2.获取二维码信息并拼接
+            print (fileNameList)
             for imgFile in fileNameList:
+                print ("Proc:",imgFile)
                 img = Image.open(imgFile)
                 barcodes = pyzbar.decode(img)
+                print ("barcodes:%d" % len(barcodes))
                 for barcode in barcodes:
                     barcodeData = barcode.data.decode("utf-8")
                     try:

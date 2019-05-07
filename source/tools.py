@@ -57,8 +57,8 @@ def main_diff(cfFile, projName, table):
         if a=='Y' or a=='y':
             break
         elif a=='N' or a=='n':
-            old_dir=raw_input('input old dir:')
-            new_dir=raw_input('input new dir:')
+            old_dir=input('input old dir:')
+            new_dir=input('input new dir:')
         else:
             continue
     
@@ -115,7 +115,7 @@ def main_diff(cfFile, projName, table):
     
 def main_patch(cfFile, projName, table):
     
-    passKey=raw_input('input the decrypt key:')
+    passKey=input('input the decrypt key:')
     assert len(passKey)==16 or len(passKey)==24 or len(passKey)==32
     if not isinstance(passKey, bytes):
         passKey = passKey.encode()    
@@ -148,11 +148,11 @@ def main_patch(cfFile, projName, table):
     
     while True:
         print ('Old Dir: '+old_dir)
-        a=raw_input('Is Directory OK?(y/n)')
+        a=input('Is Directory OK?(y/n)')
         if a=='Y' or a=='y':
             break
         elif a=='N' or a=='n':
-            old_dir=raw_input('input old dir:')
+            old_dir=input('input old dir:')
         else:
             continue
     
