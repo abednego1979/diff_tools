@@ -116,7 +116,7 @@ class myCrypt():
             
             #从视频中找二维码
             #1.打开视频
-            vc = cv2.VideoCapture('D:\\github\\diff_tools\\source\\VID_20190507_220249.mp4')
+            vc = cv2.VideoCapture('../../qrvideo.mp4')
             
             if vc.isOpened():
                 rval , frame = vc.read()
