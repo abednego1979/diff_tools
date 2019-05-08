@@ -13,10 +13,42 @@ import re
 import qrcode
 import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
-import cv2
+#import cv2
 import numpy as np
 
 __metaclass__ = type
+
+class myVideo():
+    def __init__(self):
+        pass
+    def VideoCapture(self, VideoFileName):
+        try:
+            with open(VideoFileName, 'r') as pf:
+                frames=pf.readlines()
+                frames=[np.array(json.loads(item)) for item in frames]
+        except:
+            frames=[]
+            
+        #create obj
+        VO=myVideoObj(frames)
+        
+        return VO
+    
+class myVideoObj():
+    def __init__(self, frames):
+        self.frames=frames
+        self.curIndex=0
+        pass
+    def isOpened(self):
+        return True
+    def release(self):
+        return
+    def read(self):
+        if self.curIndex<len(self.frames):
+            self.curIndex+=1
+            return True,self.frames[self.curIndex-1]
+        else:
+            return False,None
 
 class myCrypt():
     
@@ -116,7 +148,7 @@ class myCrypt():
             
             #从视频中找二维码
             #1.打开视频
-            vc = cv2.VideoCapture('../../qrvideo.mp4')
+            vc = myVideo().VideoCapture('../../data/qrvideoframes.txt')
             
             if vc.isOpened():
                 rval , frame = vc.read()
