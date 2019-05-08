@@ -5,22 +5,19 @@
 import cv2
 import json
 
-count=0
+
 vc=cv2.VideoCapture("../../data/qrvideo.mp4")
 if vc.isOpened():
     lines=[]
+    count=0
     while True:
         rval,frame=vc.read()
+        count+=1
         if rval:
-            count+=1
-            print ("%d" % count)
-            #lines.append(json.dumps(frame.tolist()))
+            if count%10==0:
+                print ("%d" % count)
+                cv2.imwrite("D:\\github\\data\\%03d.jpg" % count, frame)
         else:
             break
-    try:
-        with open("../../data/qrframes.txt", "w") as pf:
-            pf.writelines(lines)
-    except:
-        pass
     vc.release()
 
