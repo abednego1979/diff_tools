@@ -13,42 +13,9 @@ import re
 import qrcode
 import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
-#import cv2
-import numpy as np
+
 
 __metaclass__ = type
-
-class myVideo():
-    def __init__(self):
-        pass
-    def VideoCapture(self, VideoFileName):
-        try:
-            with open(VideoFileName, 'r') as pf:
-                frames=pf.readlines()
-                frames=[np.array(json.loads(item)) for item in frames]
-        except:
-            frames=[]
-            
-        #create obj
-        VO=myVideoObj(frames)
-        
-        return VO
-    
-class myVideoObj():
-    def __init__(self, frames):
-        self.frames=frames
-        self.curIndex=0
-        pass
-    def isOpened(self):
-        return True
-    def release(self):
-        return
-    def read(self):
-        if self.curIndex<len(self.frames):
-            self.curIndex+=1
-            return True,self.frames[self.curIndex-1]
-        else:
-            return False,None
 
 class myCrypt():
     
@@ -146,51 +113,48 @@ class myCrypt():
         if outFormat=='qr':
             message={}
             
-            #从视频中找二维码
-            #1.打开视频
-            vc = myVideo().VideoCapture('../../data/qrvideoframes.txt')
+            #call python2 script to get frame from video
+            f=os.popen("python2 preReadVideo_py2.py")
+            #read frame to memory
+            files=f.readlines()[0].strip("\r\n").split(",")
+            print (files)
+            frames=[Image.open(imgFileName) for imgFileName in files]
             
-            if vc.isOpened():
-                rval , frame = vc.read()
-            else:
-                rval = False
-            timeF = 20        #视频帧计数间隔频率
-            
-            c=1
             last_timeStr=""
             last_indexStr=""
-            while rval:   #循环读取视频帧  
-                rval, frame = vc.read()
-                if(c%timeF == 0) and rval: #每隔timeF帧进行存储操作
-                    #将获取到的帧转化为pil的格式
-                    img = Image.fromarray(np.uint8(frame))
-                    #如果需要，这里调整亮度，对比度，锐度，灰度图等,有时也需要适当缩放
-                    img = img.convert("L")
+            for img in frames:
+                #如果需要，这里调整亮度，对比度，锐度，灰度图等,有时也需要适当缩放
+                img = img.convert("L")
                     
-                    #识别
-                    barcodes = pyzbar.decode(img)
-                    #print ("barcodes:",barcodes)
-                    for barcode in barcodes:
-                        barcodeData = barcode.data.decode("utf-8")
-                        try:
-                            m=re.match(r'''[0-9]{12}#[0-9]{3}''',barcodeData[:16])#信息的前面是时间戳和编号（类似'201905071228#000'），共16位
-                        except:
-                            continue
-                        if m:
-                            timeStr=m.group(0)[:12]
-                            indexStr=int(m.group(0)[13:])
+                #识别
+                barcodes = pyzbar.decode(img)
+                #print ("barcodes:",barcodes)
+                for barcode in barcodes:
+                    barcodeData = barcode.data.decode("utf-8")
+                    try:
+                        m=re.match(r'''[0-9]{12}#[0-9]{3}''',barcodeData[:16])#信息的前面是时间戳和编号（类似'201905071228#000'），共16位
+                    except:
+                        continue
+                    if m:
+                        timeStr=m.group(0)[:12]
+                        indexStr=int(m.group(0)[13:])
                             
-                            if last_timeStr != timeStr or last_indexStr != indexStr:
-                                last_timeStr=timeStr
-                                last_indexStr=indexStr
-                                print ("timeStr:",timeStr,"\tindexStr:",indexStr)
-                                if timeStr in message.keys():
-                                    message[timeStr].append([indexStr, barcodeData[16:]])
-                                else:
-                                    message[timeStr]=[]
-                                    message[timeStr].append([indexStr, barcodeData[16:]])                                            
-                c=c+1
-            vc.release()
+                        if last_timeStr != timeStr or last_indexStr != indexStr:
+                            last_timeStr=timeStr
+                            last_indexStr=indexStr
+                            print ("timeStr:",timeStr,"\tindexStr:",indexStr)
+                            if timeStr in message.keys():
+                                message[timeStr].append([indexStr, barcodeData[16:]])
+                            else:
+                                message[timeStr]=[]
+                                message[timeStr].append([indexStr, barcodeData[16:]])
+                                pass
+                            pass
+                        pass
+                    pass
+                pass
+            
+
             
             #这时message是类似{"201905071202": [[0, "abcde"], [1, "fghijkl"]], "201905071203": [[0, "mnopq"], [0, "mnopq"], [1, "rstuvw"]]}的形式
             #print (message)

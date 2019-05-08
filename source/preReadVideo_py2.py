@@ -10,14 +10,18 @@ vc=cv2.VideoCapture("../../data/qrvideo.mp4")
 if vc.isOpened():
     lines=[]
     count=0
+    nameCount=0
+    outStr=[]
     while True:
         rval,frame=vc.read()
         count+=1
         if rval:
             if count%10==0:
-                print ("%d" % count)
-                cv2.imwrite("D:\\github\\data\\%03d.jpg" % count, frame)
+                cv2.imwrite("../../data/%03d.jpg" % nameCount, frame)
+                outStr.append("../../data/%03d.jpg" % nameCount)
+                nameCount+=1
         else:
             break
+    print (",".join(outStr))
     vc.release()
 
