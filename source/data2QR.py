@@ -128,7 +128,8 @@ class myCrypt():
                     
                 #识别
                 barcodes = pyzbar.decode(img)
-                #print ("barcodes:",barcodes)
+                print (frames.index(img))
+                print ("barcodes:",barcodes)
                 for barcode in barcodes:
                     barcodeData = barcode.data.decode("utf-8")
                     try:
