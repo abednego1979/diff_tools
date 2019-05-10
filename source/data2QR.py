@@ -78,7 +78,7 @@ class myCrypt():
                     #将base64编码的数据转化为二维码                
                     message=base64.b64encode(message)
                     tempIndex=0
-                    partLen=500
+                    partLen=200
                     outInfo=[]
                     while True:
                         if len(message[tempIndex*partLen : (tempIndex+1)*partLen]):
