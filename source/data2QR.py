@@ -194,6 +194,7 @@ class myCrypt():
                 else:
                     print ("Data with Index %d is miss!!!" % i)
             message="".join(message)
+            print (message)
             message = base64.b64decode(message)            
             pass
         elif outFormat=='b64':
