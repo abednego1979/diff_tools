@@ -15,7 +15,7 @@ import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
 
 import platform
-if platform.system() != "Linux"
+if platform.system() != "Linux":
     from moviepy.editor import *
     from moviepy.Clip import *
     from moviepy.video.videoClip import *
