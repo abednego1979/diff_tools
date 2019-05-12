@@ -15,6 +15,12 @@ import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
 
 
+from moviepy.editor import *
+from moviepy.Clip import *
+from moviepy.video.videoClip import *
+import cv2
+
+
 __metaclass__ = type
 
 class myCrypt():
@@ -93,6 +99,19 @@ class myCrypt():
                             tempIndex+=1
                         else:
                             break
+                
+                    #将outInfo中这些新生成的文件，制作成视频
+                    targetVideo = 'myCreateVideo.mp4'
+                    fileNames=outInfo
+                    im1=cv2.imread(fileNames[0])
+                    im2=cv2.imread(fileNames[-1])
+                    im2=cv2.resize(im2, (im1.shape[0],im1.shape[1]))
+                    cv2.imwrite(fileNames[-1], im2)
+                    frames=[cv2.imread(item) for item in fileNames]
+                    fps=2
+                    video=ImageSequenceClip(frames,fps=fps)
+                    video.write_videofile(targetVideo, fps=fps, codec='mpeg4')
+                    
                     outInfo=','.join(outInfo)
                     message=outInfo
                 elif outFormat=='b64':
