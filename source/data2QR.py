@@ -118,17 +118,18 @@ class myCrypt():
             #read frame to memory
             files=f.readlines()[0].strip("\r\n").split(",")
             print (files)
-            frames=[Image.open(imgFileName) for imgFileName in files]
             
             last_timeStr=""
             last_indexStr=""
-            for img in frames:
+            #for img in frames:
+            for imgFileName in files:
+                img=Image.open(imgFileName)
                 #如果需要，这里调整亮度，对比度，锐度，灰度图等,有时也需要适当缩放
                 img = img.convert("L")
                     
                 #识别
                 barcodes = pyzbar.decode(img)
-                print ("barcodes:",barcodes)
+                #print ("barcodes:",barcodes)
                 for barcode in barcodes:
                     barcodeData = barcode.data.decode("utf-8")
                     try:
