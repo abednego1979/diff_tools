@@ -14,11 +14,13 @@ import qrcode
 import pyzbar.pyzbar as pyzbar
 from PIL import Image,ImageEnhance
 
+import platform
+if import platform() != "Linux"
+    from moviepy.editor import *
+    from moviepy.Clip import *
+    from moviepy.video.videoClip import *
+    import cv2
 
-from moviepy.editor import *
-from moviepy.Clip import *
-from moviepy.video.videoClip import *
-import cv2
 
 
 __metaclass__ = type
