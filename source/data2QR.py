@@ -17,8 +17,6 @@ from PIL import Image,ImageEnhance
 import platform
 if platform.system() != "Linux":
     from moviepy.editor import *
-    from moviepy.Clip import *
-    from moviepy.video.videoClip import *
     import cv2
 
 
@@ -105,12 +103,13 @@ class myCrypt():
                     #将outInfo中这些新生成的文件，制作成视频
                     targetVideo = 'myCreateVideo.mp4'
                     fileNames=outInfo
+                    fileNames+=[fileNames[-1]]*5
                     im1=cv2.imread(fileNames[0])
                     im2=cv2.imread(fileNames[-1])
                     im2=cv2.resize(im2, (im1.shape[0],im1.shape[1]))
                     cv2.imwrite(fileNames[-1], im2)
                     frames=[cv2.imread(item) for item in fileNames]
-                    fps=2
+                    fps=1
                     video=ImageSequenceClip(frames,fps=fps)
                     video.write_videofile(targetVideo, fps=fps, codec='mpeg4')
                     
